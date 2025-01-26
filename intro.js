@@ -39,9 +39,11 @@ var closeSlider3 = document.querySelector(".fa-xmark")
 mail.onclick = function(){
     slider3.classList.add("active")
 }
-closeSlider3.addEventListener('click', function(){
-    slider3.classList.remove('active')
-})
+closeSlider3.addEventListener('click', function () {
+    slider3.classList.remove('active');
+    window.location.href = "4.html"; // Thay "newpage.html" bằng đường dẫn hoặc URL trang bạn muốn chuyển đến
+});
+
 
 
 // ------audio------------

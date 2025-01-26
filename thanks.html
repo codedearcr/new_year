@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You - Happy New Year</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #ff9a9e, #fad0c4);
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            font-size: 3rem;
+            color: #e74c3c;
+            margin: 0;
+        }
+        p {
+            font-size: 1.2rem;
+            margin: 10px 0 20px;
+        }
+        .fireworks {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hết rồii!</h1>
+        <p>Cảm ơn bạn vì đã xem đến đây. Happy new year!</p>
+    </div>
+    <canvas class="fireworks"></canvas>
+
+    <script>
+        const canvas = document.querySelector('.fireworks');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        function random(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        class Firework {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.color = `hsl(${random(0, 360)}, 100%, 50%)`;
+                this.particles = [];
+                for (let i = 0; i < 50; i++) {
+                    this.particles.push({
+                        x: this.x,
+                        y: this.y,
+                        vx: random(-3, 3),
+                        vy: random(-3, 3),
+                        alpha: 1,
+                    });
+                }
+            }
+            update() {
+                this.particles.forEach((p) => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.alpha -= 0.02;
+                });
+                this.particles = this.particles.filter((p) => p.alpha > 0);
+            }
+            draw() {
+                ctx.globalCompositeOperation = 'lighter';
+                this.particles.forEach((p) => {
+                    ctx.fillStyle = this.color;
+                    ctx.globalAlpha = p.alpha;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        const fireworks = [];
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (Math.random() < 0.1) {
+                fireworks.push(new Firework(random(0, canvas.width), random(0, canvas.height)));
+            }
+            fireworks.forEach((f, i) => {
+                f.update();
+                f.draw();
+                if (f.particles.length === 0) {
+                    fireworks.splice(i, 1);
+                }
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>
